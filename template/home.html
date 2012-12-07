@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="header">
+    <h1>Template your CSV</h1>
+    <div class="intro">
+        <ol>
+        <li>Fill your data in a Google Docs spreadsheet, publish it to web and paste the url</li>
+        <li>Create your template to render each row (this is <strong>not</strong> limited to HTML)</li>
+        <li>Submit</li>
+        
+        </ol>
+
+    </div>
+</div>
+    <script type="text/javascript">
+          $(function(){
+            // init Uni-Form
+            $('form.uniForm').uniform();
+          });
+        </script>
+
+    <form method="POST" action="/" class="uniForm">
+        <div class="ctrlHolder">
+            <label for="url">Google spreadsheet url (CSV export)</label>
+            <input id="url" name="url" type="url" class="textInput large" value="{% if url %}{{ url }}{% endif %}"/>
+            <p class="formHint"> Paste the url of the "Publish to web" spreadsheet. <br />
+            The first row of the spreasheet must contain the name of the column (single word).</p>
+        </div>
+
+        <div class="ctrlHolder">
+            <label for="file">Template</label>
+            <textarea id="template" name="template">{% if template %}{{ template }}{% else %}{{ "{% for row in rows %}
+<!-- template for each row -->
+{% endfor %}" }} {% endif %}
+            </textarea>
+            <p class="formHint">The template (in Jinja2 format)</p>
+        </div>
+
+        <div class="buttonHolder">
+            <input type="submit" class="primaryAction" value="Render!" />
+        </div>
+
+        <h2>Result</h2>
+        <div class="ctrlHolder">
+            <textarea readonly="readonly" id="result" name="result">{% if rendered %}{{ rendered }}{% endif %}</textarea>
+        </div>
+
+    </form>
+{% endblock %}
