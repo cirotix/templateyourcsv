@@ -9,8 +9,9 @@ from urllib import urlopen
 
 app = Bottle()
 
-env= jinja.Environment()
-env.loader= jinja.FileSystemLoader("template")
+env = jinja.Environment()
+env.loader = jinja.FileSystemLoader("template")
+
 
 def csv_to_dict(url):
     """
@@ -19,7 +20,7 @@ def csv_to_dict(url):
     """
     headers = None
     content = []
-    reader= csv.reader( urlopen(url) )
+    reader = csv.reader(urlopen(url))
 
     for row in reader:
         if reader.line_num == 1:
@@ -49,32 +50,30 @@ def index():
 
     url = request.forms.get('url')
 
-    data_template = request.forms.get('template') 
-    
+    data_template = request.forms.get('template')
+
     # convert data_template to unicode
     data_template = data_template if data_template else ""
     data_template = unicode(data_template, "utf8")
 
     rendered = ""
-    
 
     if url:
         data_dict = csv_to_dict(url)
         if data_template:
             rendered = render_csv(data_dict, data_template)
 
-    
-    template= env.get_template("home.html")
+    template = env.get_template("home.html")
 
     return template.render(
-            url=url,
-            template=data_template,
-            rendered = rendered
-            )
+        url=url,
+        template=data_template,
+        rendered=rendered
+    )
 
 
 @app.route('/static/<basedir>/<filename>')
 def server_static(basedir, filename):
-    return static_file(filename, root='/home/cirotteau/dev/csvtohtml/csvtohtml/template/static/' + basedir + '/')
+    return static_file(filename, root='/home/cirotteau/dev/templateyourcsv/templateyourcsv/template/static/' + basedir + '/')
 
-run(app, host='localhost', port=8000)
+run(app, host='localhost', port=3000)
